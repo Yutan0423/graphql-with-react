@@ -1,28 +1,32 @@
 import React from 'react';
 import { ApolloProvider, Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import Client from './Client';
+import { SEARCH_REPOSITORIES } from './graphql';
 
-const ME = gql`
-  query me {
-    user(login: "Yutan0423") {
-      name
-      avatarUrl
-    }
-  }
-`;
+const VARIABLES = {
+  first: 5,
+  after: null,
+  last: null,
+  before: null,
+  query: 'フロントエンドエンジニア',
+};
 
 const App = () => {
+  const { query, first, last, before, after } = VARIABLES;
+
   return (
     <>
       <ApolloProvider client={Client}>
-        <div>GraphQL</div>
-        <Query query={ME}>
+        <Query
+          query={SEARCH_REPOSITORIES}
+          variables={{ query, first, last, before, after }}
+        >
           {({ loading, error, data }) => {
             if (loading) return 'loading...';
             if (error) return `Error: ${error.message}`;
+            console.log(data);
 
-            return <div>{data.user.name}</div>;
+            return <div></div>;
           }}
         </Query>
       </ApolloProvider>
