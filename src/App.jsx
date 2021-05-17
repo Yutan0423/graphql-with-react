@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ApolloProvider, Query } from 'react-apollo';
 import Client from './Client';
 import { SEARCH_REPOSITORIES } from './graphql';
 
-const VARIABLES = {
+const DEFAULT_VARIABLES = {
   first: 5,
   after: null,
   last: null,
   before: null,
-  query: 'フロントエンドエンジニア',
+  value: 'フロントエンドエンジニア',
 };
 
 const App = () => {
-  const { query, first, last, before, after } = VARIABLES;
+  const { value, first, last, before, after } = DEFAULT_VARIABLES;
+  const [query, setQuery] = useState(value);
+
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+  };
 
   return (
     <>
       <ApolloProvider client={Client}>
+        <form action="">
+          <input type="text" value={query} onChange={handleChange} />
+        </form>
         <Query
           query={SEARCH_REPOSITORIES}
           variables={{ query, first, last, before, after }}
